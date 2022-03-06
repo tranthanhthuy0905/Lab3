@@ -1,7 +1,7 @@
 import re
 
 
-def javaIdCheck(expression):
+def declaration(expression):
     expressionsList = expression.split(" ")
     
     patternTerm = "^[a-z][a-zA-Z0-9_]*$"
@@ -18,9 +18,3 @@ def javaIdCheck(expression):
     x = re.sub(pattern, "X", inputVar)
     print(x)
 
-
-javaIdCheck("test++")              # X
-javaIdCheck("testing123")           # X
-javaIdCheck("testing_")             # X
-javaIdCheck("@testing")             # @testing
-javaIdCheck("testing something")    # testing something
