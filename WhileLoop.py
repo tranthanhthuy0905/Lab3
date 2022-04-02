@@ -1,31 +1,29 @@
 import re
+from unittest.mock import Base
+from BaseParse import BaseParser
 
-def whileLoop(expression):
-    patternInt = "^[+-]?[0-9]+$"
-    patternFloat = "^[+-]?([0-9]*[.])[0-9]+$"
-    patternWhile = "while"
+def whileLoop(loop):
+    _WH = "while"
+    arithmetic_pattern = "[+\-*/]"
+    conditional_pattern = "(<=)|(>=)|(!=)|(==)|(<)|(>)"
+    logical_pattern = "(\&\&)|(\|\|)"
+    condStatement_pattern = "X(AOp[NX])*COp([NX]AOp)*[NX](LOpX(AOp[NX])*COp([NX]AOp)*[NX])*"
+    expression_pattern = "[NX](AOp[NX])*;"
+    statement_pattern = "X=E|LOOP|SELECT"
+    codeblock_pattern = "[{](S)+"
+    while_pattern = "_WH(CS){CB}"
     
-    expressionList = expression.split(" ")
-    res, searching, pattern = checking(
-        patternInt, patternFloat, expressionList)
-    # if res:
-    #     if res == "F":
-    #         print("YES! It is a float")
-    #     else:
-    #         print("YES! It is an integer")
-    #     print(searching)
-    # else:
-    #     print("Oops! We got no match")
-
-    label = re.sub(pattern, res, numb)
-    return label
-
-def checking(pattern1, pattern2, numb):
-    result1 = re.search(pattern1, numb)
-    result2 = re.search(pattern2, numb)
-    if result2:
-        return "F", result2, pattern2
-    elif result1:
-        return "I", result1, pattern1
-    else:
-        return numb, "", ""
+    check_while= re.sub(_WH, "_WH", loop)
+    check_arithmetic = re.sub(arithmetic_pattern, "AOp", BaseParser(check_while))
+    check_conditional = re.sub(
+        conditional_pattern, "COp", check_arithmetic)
+    check_logical = re.sub(logical_pattern, "LOp", check_conditional)
+    check_condStatement = re.sub(
+        condStatement_pattern, "CS", check_logical)
+    check_expression = re.sub(expression_pattern, "E", check_condStatement)
+    check_statement = re.sub(statement_pattern, "S", check_expression)
+    check_codeblock = re.sub(codeblock_pattern, "{CB", check_statement)
+    check_selection = re.sub(while_pattern, "SELECT", check_codeblock)
+    print(check_selection)
+    
+whileLoop("while (x>5){ x = x + 1; y = x; }")
