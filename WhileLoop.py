@@ -2,6 +2,7 @@ import re
 from unittest.mock import Base
 from BaseParse import BaseParser
 
+
 def whileLoop(loop):
     _WH = "while"
     arithmetic_pattern = "[+\-*/]"
@@ -11,10 +12,11 @@ def whileLoop(loop):
     expression_pattern = "[NX](AOp[NX])*;"
     statement_pattern = "X=E|LOOP|SELECT"
     codeblock_pattern = "[{](S)+"
-    while_pattern = "_WH(CS){CB}"
-    
-    check_while= re.sub(_WH, "_WH", loop)
-    check_arithmetic = re.sub(arithmetic_pattern, "AOp", BaseParser(check_while))
+    while_pattern = "_WH\(CS\)\{CB\}"
+
+    check_while = re.sub(_WH, "_WH", loop)
+    check_arithmetic = re.sub(
+        arithmetic_pattern, "AOp", BaseParser(check_while))
     check_conditional = re.sub(
         conditional_pattern, "COp", check_arithmetic)
     check_logical = re.sub(logical_pattern, "LOp", check_conditional)
@@ -25,5 +27,6 @@ def whileLoop(loop):
     check_codeblock = re.sub(codeblock_pattern, "{CB", check_statement)
     check_selection = re.sub(while_pattern, "SELECT", check_codeblock)
     print(check_selection)
-    
+
+
 whileLoop("while (x>5){ x = x + 1; y = x; }")
